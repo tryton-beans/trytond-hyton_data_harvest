@@ -1,0 +1,11 @@
+<form>
+
+  <label name="name"/>
+  <field name="name"/>
+  <label name="group"/>
+  <field name="group"/>
+  <label name="query"/>
+  <newline/>
+  <field name="query" colspan="4"/>
+  <button name="harvest"/>
+</form>

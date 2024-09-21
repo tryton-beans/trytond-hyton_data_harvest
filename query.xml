@@ -1,0 +1,28 @@
+<tryton><data>
+  <record model="ir.model.button" id="harvest_query_button">
+      <field name="name">harvest</field>
+      <field name="string">Harvest</field>
+      <field name="model" search="[('model', '=', 'harvest.query')]"/>
+  </record>
+    <record model="ir.action.act_window" id="act_harvest_query">
+      <field name="name">Query</field>
+      <field name="res_model">harvest.query</field>
+    </record>
+    <record model="ir.ui.view" id="harvest_query_tree">
+      <field name="model">harvest.query</field>
+      <field name="type">tree</field>
+      <field name="name">harvest_query_tree</field>
+    </record>
+    <record model="ir.ui.view" id="harvest_query_form">
+      <field name="model">harvest.query</field>
+      <field name="type">form</field>
+      <field name="name">harvest_query_form</field>
+    </record>
+
+   <menuitem name="Data Harvest"
+             sequence="10000"
+             id="menu_data_harvest"/>
+   
+   <menuitem id="menu_harvest_query" sequence="1000"
+             parent="menu_data_harvest" action="act_harvest_query"/>
+</data></tryton>
