@@ -1,11 +1,17 @@
 (import trytond.model [ModelSQL ModelView fields]
-        trytond.pool [PoolMeta]
+        trytond.pool [Pool]
         trytond.transaction [Transaction]
         trytond.modules.hyton.utils [first]
         trytond.modules.hyton.context [context-company]
-        openpyxl [Workbook])
+        io [BytesIO]
+        openpyxl [Workbook]
+        datetime)
 
 (setv QUEUE_NAME "data_harvest")
+
+(defn now-formatted-str []
+  (.strftime (datetime.datetime.now)
+             "_%d%m%Y_%H%M%S"))
 
 (defclass HarvestQuery [ModelSQL ModelView]
   "Harvest Query"
@@ -40,13 +46,19 @@
 
   (defn export-workbook [self header records]
     (setv workbook (Workbook)
-          ws workbook.active)
+          ws workbook.active
+          result  ((.get (Pool) "harvest.result"))
+          output (BytesIO)
+          )
     (ws.append header)
     (for [record records]
       (ws.append (list record)))
     ;;  auto-filter first row
     (setv ws.auto_filter.ref ws.dimensions)
-    (.save workbook "/tmp/table-test.xlsx")
-    )
+    (.save workbook output)
+    (setv
+      result.name (+ self.name (now-formatted-str) ".xlsx")
+      result.data  (.getvalue output))
+    (.save result))
 
   )
