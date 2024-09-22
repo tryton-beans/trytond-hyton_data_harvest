@@ -7,7 +7,8 @@
         openpyxl [Workbook]
         datetime)
 
-(setv QUEUE_NAME "data_harvest")
+(setv QUEUE_NAME "data_harvest"
+      CONTEXT_COMPANY "context-company")
 
 (defn is-read-only-sql [sql]
   "Check if the SQL is read-only - DQL"
@@ -40,8 +41,11 @@
   (setv __name__ "harvest.query"
         name (fields.Char "Name" :required True)
         query (fields.Text "Query" :required True)
-        group (fields.Char "Group" :required True))
+        group (fields.Many2One "res.group" "Group")
+        )
 
+  (defn is-context-company-required [self]
+    (in CONTEXT_COMPANY self.query))
   ;;setup with a button to execute method execute
   (defn [classmethod] __setup__ [cls]
     (.__setup__ (super))
@@ -63,7 +67,7 @@
       (with [transaction (.new-transaction (Transaction))]
         (let [cursor (.cursor transaction.connection)]
           (.execute cursor self.query
-                    {"context-company" (context-company)})
+                    {CONTEXT_COMPANY (context-company)})
           (.export-workbook self
                             (list (map first cursor.description))
                             (.fetchall cursor))))))
@@ -82,7 +86,10 @@
     (.save workbook output)
     (setv
       result.name (+ self.name (now-formatted-str) ".xlsx")
-      result.data  (.getvalue output))
+      result.data  (.getvalue output)
+      result.group  self.group)
+    (when (.is-context-company-required self)
+      (setv result.company (context-company)))
     (.save result))
 
   )
