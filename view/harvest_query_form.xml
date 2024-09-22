@@ -7,5 +7,5 @@
   <label name="query"/>
   <newline/>
   <field name="query" colspan="4"/>
-  <button name="harvest"/>
+  
 </form>
