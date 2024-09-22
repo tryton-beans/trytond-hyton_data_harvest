@@ -1,13 +1,23 @@
 <tryton><data>
-    <record model="ir.action.act_window" id="act_harvest_result">
-      <field name="name">Result</field>
-      <field name="res_model">harvest.result</field>
-    </record>
-    <record model="ir.ui.view" id="harvest_result_tree">
-      <field name="model">harvest.result</field>
-      <field name="type">tree</field>
-      <field name="name">harvest_result_tree</field>
-    </record>
-    <menuitem id="menu_harvest_result" sequence="1100"
-              parent="menu_data_harvest" action="act_harvest_result"/>
+
+  <record model="ir.model.access" id="access_harvest_result">
+    <field name="model" search="[('model', '=', 'harvest.result')]"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_delete" eval="True"/>
+  </record>
+  
+  <record model="ir.action.act_window" id="act_harvest_result">
+    <field name="name">Result</field>
+    <field name="res_model">harvest.result</field>
+  </record>
+  <record model="ir.ui.view" id="harvest_result_tree">
+    <field name="model">harvest.result</field>
+    <field name="type">tree</field>
+    <field name="name">harvest_result_tree</field>
+  </record>
+  <menuitem id="menu_harvest_result" sequence="1100"
+            parent="menu_data_harvest" action="act_harvest_result"/>
+  
 </data></tryton>

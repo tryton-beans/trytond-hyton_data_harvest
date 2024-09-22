@@ -1,4 +1,39 @@
 <tryton><data>
+
+  <record model="res.group" id="group_harvest">
+    <field name="name">Harvest</field>
+  </record>
+  <record model="res.group" id="group_harvest_admin">
+    <field name="name">Harvest Administration</field>
+    <field name="parent" ref="group_harvest"/>
+  </record>
+  
+  <record model="res.user-res.group" id="user_admin_group_harvest">
+    <field name="user" ref="res.user_admin"/>
+    <field name="group" ref="group_harvest"/>
+  </record>
+  <record model="res.user-res.group" id="user_admin_group_harvest_admin">
+    <field name="user" ref="res.user_admin"/>
+    <field name="group" ref="group_harvest_admin"/>
+  </record>
+
+  <record model="ir.model.access" id="access_harvest_query">
+    <field name="model" search="[('model', '=', 'harvest.query')]"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="False"/>
+    <field name="perm_create" eval="False"/>
+    <field name="perm_delete" eval="False"/>
+  </record>
+  
+  <record model="ir.model.access" id="access_harvest_query_admin">
+    <field name="model" search="[('model', '=', 'harvest.query')]"/>
+    <field name="group" ref="group_harvest_admin"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_delete" eval="True"/>
+  </record>
+  
   <record model="ir.model.button" id="harvest_query_button">
       <field name="name">harvest</field>
       <field name="string">Harvest</field>
@@ -25,4 +60,11 @@
    
    <menuitem id="menu_harvest_query" sequence="1000"
              parent="menu_data_harvest" action="act_harvest_query"/>
+
+   <record model="ir.ui.menu-res.group" id="menu_harvest_query_admin">
+     <field name="menu" ref="menu_harvest_query"/>
+     <field name="group" ref="group_harvest_admin"/>
+   </record>
+
+   
 </data></tryton>
