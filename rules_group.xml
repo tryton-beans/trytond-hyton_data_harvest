@@ -1,0 +1,19 @@
+<tryton><data>
+  <record model="ir.rule.group" id="rule_group_harvest_result_group_rule">
+    <field name="name">Papyrus Queue group Rule</field>
+    <field name="model" search="[('model', '=', 'harvest.result')]"/>
+    <field name="global_p" eval="True"/>
+  </record>
+  <record model="ir.rule" id="rule_harvest_result_group_rule1">
+    <field name="domain"
+           eval="[('group', 'in', Eval('groups', []))]"
+           pyson="1"/>
+    <field name="rule_group" ref="rule_group_harvest_result_group_rule"/>
+  </record>
+  <record model="ir.rule" id="rule_group_harvest_result_group_rule2">
+    <field name="domain"
+           eval="[('group', 'in', [None, -1])]"
+           pyson="1"/>
+    <field name="rule_group" ref="rule_group_harvest_result_group_rule"/>
+  </record>
+</data></tryton>
