@@ -9,6 +9,28 @@
 
 (setv QUEUE_NAME "data_harvest")
 
+(defn is-read-only-sql [sql]
+  "Check if the SQL is read-only - DQL"
+  (let [write-keywords ["INSERT "
+                        "UPDATE "
+                        "DELETE "
+                        "CREATE "
+                        "TRUNCATE "
+                        "ALTER "
+                        "DROP "
+                        "RENAME "
+                        "REPLACE "
+                        "GRANT "
+                        "REVOKE "
+                        "LOCK "
+                        "INTO "
+                        "EXPLAIN "]
+        sql-upper (.strip (.upper sql))]
+    (for [keyword write-keywords]
+      (when (in keyword sql-upper)
+        (return False)))
+    (.startswith sql-upper "SELECT ")))
+
 (defn now-formatted-str []
   (.strftime (datetime.datetime.now)
              "_%d%m%Y_%H%M%S"))
@@ -37,12 +59,14 @@
         (._execute-query cls.__queue__ record))))
 
   (defn _execute-query [self]
-    (with [transaction (.new-transaction (Transaction))]
-      (let [cursor (.cursor transaction.connection)]
-        (.execute cursor self.query {"company" (context-company)})
-        (.export-workbook self
-                          (list (map first cursor.description))
-                          (.fetchall cursor)))))
+    (when (is-read-only-sql self.query)
+      (with [transaction (.new-transaction (Transaction))]
+        (let [cursor (.cursor transaction.connection)]
+          (.execute cursor self.query
+                    {"context-company" (context-company)})
+          (.export-workbook self
+                            (list (map first cursor.description))
+                            (.fetchall cursor))))))
 
   (defn export-workbook [self header records]
     (setv workbook (Workbook)
