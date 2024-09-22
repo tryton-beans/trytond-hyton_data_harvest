@@ -1,0 +1,10 @@
+* Data Harvest
+
+A SQL(DQL) to SpreadSheet module.
+
+There are 2 main entities Queries and Results.
+
+Queries are written by Harvest Admin.
+
+Results are view by Harvest users. Results can be company specific and
+the visibility can be protected with a Group.
