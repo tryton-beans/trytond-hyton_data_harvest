@@ -1,0 +1,4 @@
+<form>
+  <label name="query"/>
+  <field name="query"/>
+</form>

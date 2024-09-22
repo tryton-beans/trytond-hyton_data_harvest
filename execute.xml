@@ -1,0 +1,18 @@
+<tryton><data>
+
+  <record model="ir.action.wizard" id="act_execute_query_wizard">
+    <field name="name">Run Query</field>
+    <field name="wiz_name">harvest.execute.query.wizard</field>
+  </record>
+  
+  <record model="ir.ui.view" id="execute_query_start_form">
+    <field name="model">harvest.execute.query.start</field>
+    <field name="type">form</field>
+    <field name="name">execute_query_start_form</field>
+  </record>
+  
+  <menuitem id="menu_harvest_execute_query" sequence="100"
+            parent="menu_data_harvest" action="act_execute_query_wizard"/>
+  
+    
+</data></tryton>
