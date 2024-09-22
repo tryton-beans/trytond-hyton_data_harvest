@@ -8,3 +8,10 @@ Queries are written by Harvest Admin.
 
 Results are viewed by Harvest users. Results can be company specific and
 the visibility can be protected with a Group.
+
+** Query parameters:
+
+Write parameters like `%(party-name)s` in the Query. The value will be
+request before running the query.
+
+The `%(context-company)s` is predefined.

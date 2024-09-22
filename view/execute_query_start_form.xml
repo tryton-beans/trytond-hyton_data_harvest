@@ -1,4 +1,8 @@
 <form>
   <label name="query"/>
   <field name="query"/>
+  <newline/>
+  <label name="parameters"/>
+  <field name="parameters"/>
+
 </form>

@@ -5,7 +5,8 @@
         trytond.modules.hyton.context [context-company]
         io [BytesIO]
         openpyxl [Workbook]
-        datetime)
+        datetime
+        re)
 
 (setv QUEUE_NAME "data_harvest"
       CONTEXT_COMPANY "context-company")
@@ -36,6 +37,14 @@
   (.strftime (datetime.datetime.now)
              "_%d%m%Y_%H%M%S"))
 
+(defn extract-sql-parameters [sql-query]
+  "Extract sql parameters from a sql string"
+  (list
+    (filter
+      (fn [r] (not (= r "context-company")))
+         (.findall re r"%\(([^\)]+)\)s" sql-query)))
+  )
+
 (defclass HarvestQuery [ModelSQL ModelView]
   "Harvest Query"
   (setv __name__ "harvest.query"
@@ -55,19 +64,24 @@
                False}
               }))
 
+  (defn parameters [self]
+    (extract-sql-parameters self.query))
+ 
   (defn [classmethod
          ModelView.button]
-    harvest [cls records]
+    harvest [cls records [user-parameters {}]]
     (with [(.set_context (Transaction) :queue_name QUEUE_NAME)]
       (for [record records]
-        (._execute-query cls.__queue__ record))))
+        (._execute-query cls.__queue__ record user-parameters))))
 
-  (defn _execute-query [self]
+  (defn _execute-query [self [user-parameters {}]]
     (when (is-read-only-sql self.query)
       (with [transaction (.new-transaction (Transaction))]
-        (let [cursor (.cursor transaction.connection)]
-          (.execute cursor self.query
-                    {CONTEXT_COMPANY (context-company)})
+        (let [cursor (.cursor transaction.connection)
+              params {}]
+          (.update params user-parameters)
+          (.update params {CONTEXT_COMPANY (context-company)})
+          (.execute cursor self.query params)
           (.export-workbook self
                             (list (map first cursor.description))
                             (.fetchall cursor))))))
