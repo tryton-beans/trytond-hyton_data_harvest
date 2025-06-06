@@ -13,7 +13,7 @@
             </field>
         </record>
         
-        <menuitem name="Configuration" parent="menu_harvest" 
+        <menuitem name="Configuration" parent="menu_data_harvest" 
                   id="menu_harvest_config" sequence="99"/>
         <menuitem name="Harvest Configuration" parent="menu_harvest_config"
                   action="act_harvest_config" id="menu_harvest_config_form"/>
