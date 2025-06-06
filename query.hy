@@ -35,7 +35,7 @@
     (for [keyword write-keywords]
       (when (in keyword sql-upper)
         (return False)))
-    True))
+    (.startswith sql-upper "SELECT ")))
 
 (defn now-formatted-str []
   (.strftime (datetime.datetime.now)
