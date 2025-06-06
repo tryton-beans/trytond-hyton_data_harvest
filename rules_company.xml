@@ -1,6 +1,6 @@
 <tryton><data>
   <record model="ir.rule.group" id="rule_company_harvest_result_rule">
-    <field name="name">Papyrus Queue Company Rule</field>
+    <field name="name">Harvest Result Company Rule</field>
     <field name="model" search="[('model', '=', 'harvest.result')]"/>
     <field name="global_p" eval="True"/>
   </record>
