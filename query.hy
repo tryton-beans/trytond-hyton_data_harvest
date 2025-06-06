@@ -8,8 +8,7 @@
         datetime
         re)
 
-(setv QUEUE_NAME "data_harvest"
-      CONTEXT_COMPANY "context-company")
+(setv CONTEXT_COMPANY "context-company")
 
 (defn is-read-only-sql [sql]
   "Check if the SQL is read-only - DQL"
@@ -74,9 +73,11 @@
   (defn [classmethod
          ModelView.button]
     harvest [cls records [user-parameters {}]]
-    (with [(.set_context (Transaction) :queue_name QUEUE_NAME)]
-      (for [record records]
-        (._execute-query cls.__queue__ record user-parameters))))
+    (let [config ((.get (Pool) "harvest.config") 1)
+          queue-name (if config config.queue_name "data_harvest")]
+      (with [(.set_context (Transaction) :queue_name queue-name)]
+        (for [record records]
+          (._execute-query cls.__queue__ record user-parameters)))))
 
   (defn _execute-query [self [user-parameters {}]]
     (when (is-read-only-sql self.query)
