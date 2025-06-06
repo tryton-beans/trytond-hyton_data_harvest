@@ -1,26 +1,4 @@
-<?xml version="1.0"?>
-<tryton>
-    <data>
-        <record model="ir.ui.view" id="harvest_config_view_form">
-            <field name="model">harvest.config</field>
-            <field name="type">form</field>
-            <field name="name">harvest_config_form</field>
-            <field name="arch" type="xml">
-                <form>
-                    <label name="queue_name"/>
-                    <field name="queue_name"/>
-                </form>
-            </field>
-        </record>
-        
-        <menuitem name="Configuration" parent="menu_data_harvest" 
-                  id="menu_harvest_config" sequence="99"/>
-        <menuitem name="Harvest Configuration" parent="menu_harvest_config"
-                  action="act_harvest_config" id="menu_harvest_config_form"/>
-                  
-        <record model="ir.action.act_window" id="act_harvest_config">
-            <field name="name">Harvest Configuration</field>
-            <field name="res_model">harvest.config</field>
-        </record>
-    </data>
-</tryton>
+<form>
+  <label name="queue_name"/>
+  <field name="queue_name"/>
+</form>
