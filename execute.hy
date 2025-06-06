@@ -11,9 +11,13 @@
 
   (defn [(fields.depends "parameters" "query")]
     on-change-query [self  [name None]]
-    (setv self.parameters (.join "\n"
-                                 (map (fn [s](+ s ":"))
-                                      (self.query.parameters))))))
+    (setv self.parameters
+          (if (and self.query self.query.parameters)
+              (.join "\n"
+                     (map (fn [s](+ s ":"))
+                          (self.query.parameters)))
+              ""))))
+
 (defn strip-lines [s]
   (.join "\n"
          (lfor line (.split s "\n")
