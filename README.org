@@ -1,17 +1,53 @@
 * Data Harvest
 
-A SQL(DQL) to SpreadSheet module.
+A Tryton module that enables SQL Data Query Language (DQL) execution with results exported to Excel spreadsheets.
 
-There are 2 main entities Queries and Results.
+** Overview
 
-Queries are written by Harvest Admin.
+Data Harvest provides a secure way to execute read-only SQL queries and export the results as Excel files. The module consists of two main entities:
 
-Results are viewed by Harvest users. Results can be company specific and
-the visibility can be protected with a Group.
+- *Queries*: SQL templates created by administrators
+- *Results*: Generated Excel files accessible to users
 
-** Query parameters:
+** Features
 
-Write parameters like `%(party-name)s` in the Query. The value will be
-request before running the query.
+- Execute read-only SQL queries (SELECT statements only)
+- Export query results to Excel format with auto-filtering
+- Parameterized queries with user input
+- Company-specific data filtering
+- Group-based access control
+- Asynchronous query execution via task queue
 
-The `%(context-company)s` is predefined.
+** Security
+
+- Only SELECT statements are permitted (enforced by ~is-read-only-sql~ function)
+- Blocks INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, and other write operations
+- Company context isolation when required
+- Group-based visibility controls
+
+** Query Parameters
+
+Parameters can be embedded in queries using the format ~%(parameter-name)s~:
+
+- Custom parameters: ~%(party-name)s~, ~%(date-from)s~, etc.
+- Built-in parameters: ~%(context-company)s~ (automatically populated)
+
+Users will be prompted to provide values for custom parameters before query execution.
+
+** Usage
+
+1. Create a new Harvest Query with appropriate SQL
+2. Assign to a security group if needed
+3. Execute the query (runs asynchronously)
+4. View results in the Harvest Results list
+5. Download the generated Excel file
+
+** Example Query
+
+#+BEGIN_SRC sql
+SELECT p.name, p.code, p.active
+FROM party_party p
+WHERE p.company = %(context-company)s
+  AND p.name ILIKE '%%%(party-name)s%%'
+ORDER BY p.name
+#+END_SRC
