@@ -26,12 +26,16 @@
                         "REVOKE "
                         "LOCK "
                         "INTO "
-                        "EXPLAIN "]
+                        "CALL "
+                        "EXEC "
+                        "EXECUTE "
+                        "MERGE "
+                        "COMMENT "]
         sql-upper (.strip (.upper sql))]
     (for [keyword write-keywords]
       (when (in keyword sql-upper)
         (return False)))
-    (.startswith sql-upper "SELECT ")))
+    True))
 
 (defn now-formatted-str []
   (.strftime (datetime.datetime.now)
